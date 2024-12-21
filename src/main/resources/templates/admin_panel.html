@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<h1>Admin Panel</h1>
+<table>
+    <tr>
+        <th>Full Name</th>
+        <th>Contact Phone</th>
+        <th>Service Type</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="request : ${requests}">
+        <td th:text="${request.user.fullName}">Full Name</td>
+        <td th:text="${request.contactPhone}">Contact Phone</td>
+        <td th:text="${request.serviceType}">Service Type</td>
+        <td th:text="${request.status}">Status</td>
+        <td>
+            <form th:action="@{/api/requests/{id}(id=${request.id})}" method="post">
+                <button type="submit" th:name="status" value="inProgress">In Progress</button>
+                <button type="submit" th:name="status" value="completed">Completed</button>
+                <button type="submit" th:name="status" value="cancelled">Cancelled</button>
+            </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
