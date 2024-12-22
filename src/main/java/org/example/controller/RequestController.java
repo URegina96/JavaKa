@@ -21,18 +21,18 @@ public class RequestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createRequest(@RequestBody Request request) {
+    public ResponseEntity<Request> createRequest(@RequestBody Request request) {
         return ResponseEntity.ok(requestService.createRequest(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRequest(@PathVariable Long id, @RequestBody Request request) {
+    public ResponseEntity<Request> updateRequest(@PathVariable Long id, @RequestBody Request request) {
         request.setId(id);
         return ResponseEntity.ok(requestService.updateRequest(request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRequest(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteRequest(@PathVariable Long id) {
         requestService.deleteRequest(id);
         return ResponseEntity.ok().build();
     }
