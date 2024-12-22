@@ -28,9 +28,54 @@
     <button type="submit">Create Request</button>
 </form>
 
+<h2>Request History</h2>
+<table id="requestHistoryTable">
+    <thead>
+    <tr>
+        <th>Address</th>
+        <th>Contact Phone</th>
+        <th>Service Type</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Payment Method</th>
+    </tr>
+    </thead>
+    <tbody id="requestHistoryBody">
+    </tbody>
+</table>
+
 <script>
-    $(document).ready(function(){
-        $("#requestForm").submit(function(event){
+    $(document).ready(function() {
+        // Функция загрузки истории заказов
+        function loadRequestHistory() {
+            $.ajax({
+                type: "GET",
+                url: "/api/requests",
+                contentType: "application/json",
+                success: function(data) {
+                    var requestHistoryBody = $("#requestHistoryBody");
+                    requestHistoryBody.empty(); // Очистка таблицы перед добавлением новых данных
+                    data.forEach(function(request) {
+                        var row = $("<tr>");
+                        row.append($("<td>").text(request.address));
+                        row.append($("<td>").text(request.contactPhone));
+                        row.append($("<td>").text(request.serviceType));
+                        row.append($("<td>").text(request.preferredDate));
+                        row.append($("<td>").text(request.preferredTime));
+                        row.append($("<td>").text(request.paymentMethod));
+                        requestHistoryBody.append(row);
+                    });
+                },
+                error: function(error) {
+                    alert("Ошибка при загрузке истории заказов: " + error.responseText);
+                }
+            });
+        }
+
+        // Загрузка истории заказов при загрузке страницы
+        loadRequestHistory();
+
+        $("#requestForm").submit(function(event) {
             event.preventDefault(); // Предотвратить стандартную отправку формы
             var csrfToken = $("#_csrf").val(); // Получение CSRF-токена
 
@@ -57,10 +102,11 @@
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("X-CSRF-TOKEN", csrfToken); // Добавление CSRF-заголовка
                 },
-                success: function(response){
+                success: function(response) {
                     alert("Запрос успешно создан!");
+                    loadRequestHistory(); // Обновление истории заказов после успешного создания запроса
                 },
-                error: function(error){
+                error: function(error) {
                     alert("Ошибка при создании запроса: " + error.responseText);
                 }
             });
@@ -69,4 +115,3 @@
 </script>
 </body>
 </html>
-
