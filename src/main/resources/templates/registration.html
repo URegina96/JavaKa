@@ -3,23 +3,14 @@
 <head>
     <title>Registration</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <script>
-        function validateForm() {
-            var password = document.getElementById("password").value;
-            if (password.length < 6) {
-                alert("Password must be at least 6 characters long.");
-                return false;
-            }
-            return true;
-        }
-    </script>
 </head>
 <body>
 <h1>Register</h1>
-<form th:action="@{/api/users/register}" th:object="${user}" method="post" onsubmit="return validateForm()">
+<form th:action="@{/api/users/register}" th:object="${user}" method="post">
+    <div th:if="${error}" th:text="${error}" style="color:red;"></div>
     <input type="text" th:field="*{fullName}" placeholder="Full Name" required>
     <input type="text" th:field="*{username}" placeholder="Username" required>
-    <input type="password" th:field="*{password}" placeholder="Password" id="password" required>
+    <input type="password" th:field="*{password}" placeholder="Password" required>
     <input type="text" th:field="*{phone}" placeholder="Phone" required>
     <input type="email" th:field="*{email}" placeholder="Email" required>
     <button type="submit">Register</button>

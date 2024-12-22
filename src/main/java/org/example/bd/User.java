@@ -1,5 +1,9 @@
 package org.example.bd;
+
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "users")
@@ -23,6 +27,8 @@ public class User {
 
     @Column(nullable = false)
     private String email;
+
+    // Геттеры и сеттеры
 
     public Long getId() {
         return id;
