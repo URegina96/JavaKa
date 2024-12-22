@@ -23,8 +23,10 @@ public class RequestController {
     private UserService userService;
 
     @GetMapping
-    public List<Request> getAllRequests() {
-        return requestService.getAllRequests();
+    public List<Request> getAllRequests(Principal principal) {
+        String username = principal.getName();
+        User user = userService.findByUsername(username);
+        return requestService.getAllRequestsByUser(user);
     }
 
     @PostMapping
@@ -45,9 +47,15 @@ public class RequestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Request> updateRequest(@PathVariable Long id, @RequestBody Request request) {
-        request.setId(id);
-        return ResponseEntity.ok(requestService.updateRequest(request));
+    public ResponseEntity<Request> updateRequestStatus(@PathVariable Long id, @RequestBody Request request) {
+        Request existingRequest = requestService.getRequestById(id);
+        if (existingRequest != null) {
+            existingRequest.setStatus(request.getStatus());
+            existingRequest.setRejectionReason(request.getRejectionReason());
+            requestService.updateRequest(existingRequest);
+            return ResponseEntity.ok(existingRequest);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

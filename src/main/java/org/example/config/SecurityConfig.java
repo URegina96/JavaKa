@@ -21,10 +21,10 @@ public class SecurityConfig {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/register", "/api/users/register", "/login", "/api/users/login").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .csrf().and() // Включение CSRF-защиты
                 .formLogin(formLogin ->
                         formLogin
                                 .loginPage("/login")

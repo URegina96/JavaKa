@@ -1,11 +1,13 @@
 package org.example.service;
 
 import org.example.bd.Request;
+import org.example.bd.User;
 import org.example.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RequestService {
@@ -17,14 +19,12 @@ public class RequestService {
         return requestRepository.findAll();
     }
 
+    public List<Request> getAllRequestsByUser(User user) {
+        return requestRepository.findByUser(user);
+    }
+
     public Request createRequest(Request request) {
-        try {
-            return requestRepository.save(request);
-        } catch (Exception e) {
-            // Логируем ошибку
-            System.err.println("Ошибка при создании запроса: " + e.getMessage());
-            throw e;
-        }
+        return requestRepository.save(request);
     }
 
     public Request updateRequest(Request request) {
@@ -33,5 +33,10 @@ public class RequestService {
 
     public void deleteRequest(Long requestId) {
         requestRepository.deleteById(requestId);
+    }
+
+    public Request getRequestById(Long id) {
+        Optional<Request> request = requestRepository.findById(id);
+        return request.orElse(null);
     }
 }
