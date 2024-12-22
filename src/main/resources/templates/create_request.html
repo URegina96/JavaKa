@@ -3,50 +3,70 @@
 <head>
     <title>Create Request</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <h1>Create Request</h1>
-<form th:action="@{/api/requests}" th:object="${request}" method="post">
-    <input type="text" th:field="*{address}" placeholder="Address" required>
-    <input type="text" th:field="*{contactPhone}" placeholder="Contact Phone" required>
-    <select th:field="*{serviceType}" required>
+<form id="requestForm">
+    <input type="text" id="address" placeholder="Address" required>
+    <input type="text" id="contactPhone" placeholder="Contact Phone" required>
+    <select id="serviceType" required>
         <option value="general">General Cleaning</option>
         <option value="deep">Deep Cleaning</option>
         <option value="postConstruction">Post-Construction Cleaning</option>
         <option value="carpet">Carpet Cleaning</option>
         <option value="other">Other</option>
     </select>
-    <input type="text" th:field="*{additionalInfo}" placeholder="Additional Info">
-    <input type="date" th:field="*{preferredDate}" required>
-    <input type="time" th:field="*{preferredTime}" required>
-    <select th:field="*{paymentMethod}" required>
+    <input type="text" id="additionalInfo" placeholder="Additional Info">
+    <input type="date" id="preferredDate" required>
+    <input type="time" id="preferredTime" required>
+    <select id="paymentMethod" required>
         <option value="cash">Cash</option>
         <option value="card">Card</option>
     </select>
+    <input type="hidden" id="_csrf" th:value="${_csrf.token}"/>
     <button type="submit">Create Request</button>
 </form>
-<h2>Request History</h2>
-<table>
-    <thead>
-    <tr>
-        <th>Address</th>
-        <th>Contact Phone</th>
-        <th>Service Type</th>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Payment Method</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="request : ${requests}">
-        <td th:text="${request.address}"></td>
-        <td th:text="${request.contactPhone}"></td>
-        <td th:text="${request.serviceType}"></td>
-        <td th:text="${request.preferredDate}"></td>
-        <td th:text="${request.preferredTime}"></td>
-        <td th:text="${request.paymentMethod}"></td>
-    </tr>
-    </tbody>
-</table>
+
+<script>
+    $(document).ready(function(){
+        $("#requestForm").submit(function(event){
+            event.preventDefault(); // Предотвратить стандартную отправку формы
+            var csrfToken = $("#_csrf").val(); // Получение CSRF-токена
+
+            // Предполагаем, что идентификатор текущего пользователя доступен в переменной `currentUserId`
+            var currentUserId = 1; // Пример значения, замените его на актуальное
+
+            var requestData = {
+                address: $("#address").val(),
+                contactPhone: $("#contactPhone").val(),
+                serviceType: $("#serviceType").val(),
+                additionalInfo: $("#additionalInfo").val(),
+                preferredDate: $("#preferredDate").val(),
+                preferredTime: $("#preferredTime").val(),
+                paymentMethod: $("#paymentMethod").val(),
+                status: "pending",
+                user: { id: currentUserId } // Добавление пользователя в запрос
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/api/requests",
+                contentType: "application/json",
+                data: JSON.stringify(requestData),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRF-TOKEN", csrfToken); // Добавление CSRF-заголовка
+                },
+                success: function(response){
+                    alert("Запрос успешно создан!");
+                },
+                error: function(error){
+                    alert("Ошибка при создании запроса: " + error.responseText);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
+

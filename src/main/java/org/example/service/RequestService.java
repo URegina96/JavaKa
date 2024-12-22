@@ -18,7 +18,13 @@ public class RequestService {
     }
 
     public Request createRequest(Request request) {
-        return requestRepository.save(request);
+        try {
+            return requestRepository.save(request);
+        } catch (Exception e) {
+            // Логируем ошибку
+            System.err.println("Ошибка при создании запроса: " + e.getMessage());
+            throw e;
+        }
     }
 
     public Request updateRequest(Request request) {

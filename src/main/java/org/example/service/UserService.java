@@ -1,8 +1,8 @@
 package org.example.service;
 
 import org.example.bd.User;
-import org.example.repository.UserRepository;
 import org.example.config.CustomUserDetails;
+import org.example.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,5 +36,9 @@ public class UserService implements UserDetailsService {
 
     public boolean usernameExists(String username) {
         return userRepository.findByUsername(username) != null;
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

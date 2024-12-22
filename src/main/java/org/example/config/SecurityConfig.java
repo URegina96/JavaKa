@@ -24,6 +24,7 @@ public class SecurityConfig {
                                 .requestMatchers("/register", "/api/users/register", "/login", "/api/users/login").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .csrf().and() // Включение CSRF-защиты
                 .formLogin(formLogin ->
                         formLogin
                                 .loginPage("/login")
