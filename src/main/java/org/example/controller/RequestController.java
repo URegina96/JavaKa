@@ -26,19 +26,19 @@ public class RequestController {
     public List<Request> getAllRequests(Principal principal) {
         String username = principal.getName();
         User user = userService.findByUsername(username);
-        return requestService.getAllRequestsByUser(user);
+        if ("adminka".equals(username)) {
+            return requestService.getAllRequests();
+        } else {
+            return requestService.getAllRequestsByUser(user);
+        }
     }
 
     @PostMapping
     public ResponseEntity<?> createRequest(@RequestBody Request request, Principal principal) {
         try {
-            // Получение текущего пользователя
             String username = principal.getName();
             User user = userService.findByUsername(username);
-
-            // Установка пользователя в запрос
             request.setUser(user);
-
             Request createdRequest = requestService.createRequest(request);
             return ResponseEntity.ok(createdRequest);
         } catch (Exception e) {
