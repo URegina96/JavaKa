@@ -22,13 +22,13 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/register", "/api/users/register", "/login", "/api/users/login").permitAll()
+                                .requestMatchers("/register", "/api/users/register", "/login", "/api/users/login", "/css/**", "/js/**", "/images/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin ->
                         formLogin
                                 .loginPage("/login")
-                                .defaultSuccessUrl("/create-request", true)
+                                .defaultSuccessUrl("/default", true)
                                 .permitAll()
                 )
                 .logout(logout ->

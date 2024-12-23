@@ -5,6 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,15 +22,21 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute("loginRequest") LoginRequest loginRequest, Model model) {
-        // Попытка аутентификации
         try {
-            authenticationManager.authenticate(
+            Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Определяем роль пользователя
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+                return "redirect:/admin"; // Перенаправляем на админ панель
+            }
+            return "redirect:/create-request"; // Для обычных пользователей
         } catch (BadCredentialsException e) {
             model.addAttribute("error", "Invalid username or password");
-            return "login"; // Возврат на страницу входа с сообщением об ошибке
+            return "login";
         }
-        return "redirect:/create-request"; // Успешная аутентификация
     }
+
 }

@@ -33,7 +33,7 @@ public class HomeController {
         return "create_request";
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/admin_panel")
     public String showAdminPanel(Model model) {
         model.addAttribute("requests", requestService.getAllRequests());
         return "admin_panel";
