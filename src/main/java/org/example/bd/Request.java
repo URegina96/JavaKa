@@ -41,7 +41,6 @@ public class Request {
 
     private String rejectionReason;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
