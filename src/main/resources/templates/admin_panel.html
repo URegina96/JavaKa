@@ -2,28 +2,31 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="container">
     <h1>Admin Panel</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>Full Name</th>
-            <th>Contact Phone</th>
-            <th>Service Type</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody id="requestsTableBody">
-        <!-- Заявки будут загружаться сюда -->
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table>
+            <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Contact Phone</th>
+                <th>Service Type</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="requestsTableBody">
+            <!-- Заявки будут загружаться сюда -->
+            </tbody>
+        </table>
+    </div>
 
     <script>
         $(document).ready(function() {
@@ -37,14 +40,14 @@
                         requestsTableBody.empty(); // Очистка таблицы перед добавлением новых данных
                         data.forEach(function(request) {
                             var row = $("<tr>");
-                            row.append($("<td>").text(request.user.fullName));
-                            row.append($("<td>").text(request.contactPhone));
-                            row.append($("<td>").text(request.serviceType));
-                            row.append($("<td>").text(request.preferredDate));
-                            row.append($("<td>").text(request.preferredTime));
-                            row.append($("<td>").text(request.status));
+                            row.append($("<td>").attr("data-label", "Full Name").text(request.user.fullName));
+                            row.append($("<td>").attr("data-label", "Contact Phone").text(request.contactPhone));
+                            row.append($("<td>").attr("data-label", "Service Type").text(request.serviceType));
+                            row.append($("<td>").attr("data-label", "Date").text(request.preferredDate));
+                            row.append($("<td>").attr("data-label", "Time").text(request.preferredTime));
+                            row.append($("<td>").attr("data-label", "Status").text(request.status));
 
-                            var actions = $("<td>");
+                            var actions = $("<td>").attr("data-label", "Actions");
                             var statusSelect = $("<select>").append(
                                 $("<option>").val("inProgress").text("In Progress"),
                                 $("<option>").val("completed").text("Completed"),
